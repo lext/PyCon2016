@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+        <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css')}}" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-theme.min.css')}}" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="{{ url_for('static', filename='bootstrap.min.js')}}" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='sketch.min.js')     }}"></script>
+     
+
+
+    </head>
+    </head>
+
+<body>
+
+   <div class="container">
+
+    <div class="page-header">
+        <h1>Digit classifier</h1>
+        <p class="lead">Integration of scikit-learn and flask</p>
+    </div>
+
+    <canvas id="sketch" style="border: 1px solid black; cursor: crosshair;" width="400" height="400"></canvas>
+    <br/>
+    <br/>
+    <button class="btn" id="recognizeBtn">Recognize</button>
+    <button class="btn" id="clearBtn">Clear</button>
+
+    <br/>
+    <br/>
+    <p id="digit"class="text-center h2"></p>
+    <script type="text/javascript">
+      $(function() {
+        var sketch = $('#sketch').sketch();
+      });
+
+      $('#recognizeBtn').on('click', function (e) {
+        var canvas = document.getElementById('sketch');
+        $.ajax({
+          type: "POST",
+          url: '/recognizer',
+          data: JSON.stringify({'image':canvas.toDataURL()}),
+          contentType: "application/json; charset=utf-8",
+        }).done(function(data) {
+            console.log(data);
+            var text = $('#digit').text();
+            $('#digit').text('Recognized digit: '+data)
+        });
+
+       });
+
+      $('#clearBtn').on('click', function (e) {
+        var canvas = document.getElementById('sketch');
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        $('#sketch').sketch('actions',[]);
+        $('#digit').text('');
+
+       });
+
+    </script>
+
+  </div>
+
+
+
+</body>
