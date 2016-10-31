@@ -1,11 +1,11 @@
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, make_response
+import numpy as np
+import base64
+
+from flask import Flask, request, render_template, make_response
 from sklearn.externals import joblib
 from io import BytesIO
 from skimage import io as skio
 from skimage.transform import resize
-
-import base64
-import numpy as np
 
 
 app = Flask(__name__, static_url_path='/static')
