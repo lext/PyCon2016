@@ -6,7 +6,7 @@ from sklearn.externals import joblib
 from io import BytesIO
 from skimage import io as skio
 from skimage.transform import resize
-
+from utils import make_mnist
 
 app = Flask(__name__, static_url_path='/static')
 clf = joblib.load('clf.pkl')
@@ -23,7 +23,7 @@ def recognize():
 
     img = skio.imread(BytesIO(base64.b64decode(data)))[:,:,3]
 
-    img = resize(img, (28, 28))
+    img = make_mnist(img)
 
     number = clf.predict(img.reshape(1, -1))[0]
 
